@@ -43,9 +43,9 @@ public class WordWatermarkProcessor extends AbstractWatermarkProcessor {
                         700 / 2.0 - watermarkParam.getXMove());
                 watermarkPara.appendChild(shape);
                 insertWatermark(doc, watermarkPara);
-            }else {
-                for (int j = 0; j < 500; j = j + watermarkParam.getYMove()) {
-                    for (int i = 0; i < 700; i = i + watermarkParam.getXMove()) {
+            } else {
+                for (int j = 0; j < doc.getPageInfo(0).getHeightInPoints(); j = 200 + j + watermarkParam.getYMove()) {
+                    for (int i = 0; i < doc.getPageInfo(0).getWidthInPoints(); i = 200 + i + watermarkParam.getXMove()) {
                         Shape waterShape = buildShape(doc, watermarkParam.getImageFile(), j, i);
                         watermarkPara.appendChild(waterShape);
                     }
@@ -55,10 +55,10 @@ public class WordWatermarkProcessor extends AbstractWatermarkProcessor {
             outputStream = new ByteArrayOutputStream();
             doc.save(outputStream, SaveFormat.DOCX);
             return outputStream.toByteArray();
-        }catch (Exception e) {
+        } catch (Exception e) {
             logger.error("WordWatermarkProcessor {}", e.getMessage());
             throw new WatermarkException(e.getMessage());
-        }finally {
+        } finally {
             IoUtil.close(outputStream);
             IoUtil.close(inputStream);
         }
@@ -68,7 +68,7 @@ public class WordWatermarkProcessor extends AbstractWatermarkProcessor {
      * 插入水印
      *
      * @param watermarkPara 水印段落
-     * @param doc 对象
+     * @param doc           对象
      * @throws Exception 异常
      */
     private void insertWatermark(Document doc, Paragraph watermarkPara) throws Exception {
@@ -84,7 +84,7 @@ public class WordWatermarkProcessor extends AbstractWatermarkProcessor {
      *
      * @param watermarkPara 水印段落
      * @param sect          部件
-     * @param headerType  {@link HeaderFooterType}   头标类型字段
+     * @param headerType    {@link HeaderFooterType}   头标类型字段
      * @throws Exception 异常
      */
     private void insertWatermark(Paragraph watermarkPara, Section sect, int headerType) throws Exception {
@@ -111,16 +111,16 @@ public class WordWatermarkProcessor extends AbstractWatermarkProcessor {
     /**
      * 构建shape类
      *
-     * @param doc            文档对象
+     * @param doc     文档对象
      * @param imgFile 水印图片
-     * @param left 左
-     * @param top  下
+     * @param left    左
+     * @param top     下
      * @return {@link Shape} shape类
      * @throws Exception 异常
      */
     private Shape buildShape(Document doc, File imgFile, double left, double top) throws Exception {
 
-        Shape shape = new Shape(doc, ShapeType.IMAGE);
+        Shape shape = new Shape(doc, ShapeType.RECTANGLE);
         BufferedImage sourceImg = ImageIO.read(imgFile);
         shape.setWidth(sourceImg.getWidth());
         shape.setHeight(sourceImg.getHeight());
@@ -131,11 +131,6 @@ public class WordWatermarkProcessor extends AbstractWatermarkProcessor {
 
         return shape;
     }
-
-
-
-
-
 
 
 }

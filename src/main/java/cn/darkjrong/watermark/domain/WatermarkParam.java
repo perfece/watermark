@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.awt.*;
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * 水印参数
@@ -15,9 +16,22 @@ import java.io.File;
 public class WatermarkParam {
 
     /**
-     * 图片
+     * 文件
      */
     private File file;
+
+    /**
+     * 文件流，与文件二选一
+     */
+    private InputStream fileStream;
+    /**
+     * 临时文件：文件流形式时，暂存的文件
+     */
+    private File tmpFile;
+    /**
+     * 文件类型,文件流是，必输
+     */
+    private String fileType;
 
     /**
      * 水印图片, 与文本二选一
@@ -76,6 +90,19 @@ public class WatermarkParam {
         this.file = file;
         return this;
     }
+    public WatermarkParam tmpFile(File tmpFile) {
+        this.tmpFile = tmpFile;
+        return this;
+    }
+    public WatermarkParam fileStream(InputStream fileStream) {
+        this.fileStream = fileStream;
+        return this;
+    }
+
+    public WatermarkParam fileType(String fileType) {
+        this.fileType = fileType;
+        return this;
+    }
 
     public WatermarkParam imageFile(File imageFile) {
         this.imageFile = imageFile;
@@ -130,5 +157,19 @@ public class WatermarkParam {
         return this;
     }
 
+    public void setFile(File file) {
+        this.file = file;
+    }
 
+    public void setFileStream(InputStream fileStream) {
+        this.fileStream = fileStream;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public void setTmpFile(File tmpFile) {
+        this.tmpFile = tmpFile;
+    }
 }

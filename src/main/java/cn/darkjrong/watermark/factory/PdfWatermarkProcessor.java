@@ -45,8 +45,8 @@ public class PdfWatermarkProcessor extends AbstractWatermarkProcessor {
             Image image = ImageIO.read(watermarkParam.getImageFile());
 
             //设置水印背景的宽高，还有透明度
-            imageStamp.setHeight(image.getWidth(null));
-            imageStamp.setWidth(image.getHeight(null));
+            imageStamp.setHeight(image.getHeight(null));
+            imageStamp.setWidth(image.getWidth(null));
             imageStamp.setOpacity(1 - watermarkParam.getAlpha());
 
             for (int i = 1; i <= pdfDocument.getPages().size(); i++) {

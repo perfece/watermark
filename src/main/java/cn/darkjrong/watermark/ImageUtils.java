@@ -101,7 +101,7 @@ public class ImageUtils {
         try {
             byte[] rotate = rotate(imageFile, degree);
             byte[] alphaBytes = transferAlpha(rotateInput = new ByteArrayInputStream(rotate), 1);
-            changeAlpha(alphaInput = new ByteArrayInputStream(alphaBytes), imageFile, Convert.toInt(alpha));
+            changeAlpha(alphaInput = new ByteArrayInputStream(alphaBytes), imageFile, Convert.toInt(10*alpha));
             return imageFile;
         } finally {
             IoUtil.close(rotateInput);
@@ -164,11 +164,13 @@ public class ImageUtils {
             int weight = image.getWidth();
             int height = image.getHeight();
 
+            // 增加下面代码使得背景透明
             BufferedImage output = new BufferedImage(weight, height, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2 = output.createGraphics();
             output = g2.getDeviceConfiguration().createCompatibleImage(weight, height, Transparency.TRANSLUCENT);
             g2.dispose();
             g2 = output.createGraphics();
+            g2.setColor(new Color(242, 242, 242));
 
             //调制透明度
             for (int j1 = output.getMinY(); j1 < output.getHeight(); j1++) {
@@ -209,7 +211,7 @@ public class ImageUtils {
 
             BufferedImage res = new BufferedImage(rectDes.width, rectDes.height, BufferedImage.TYPE_INT_RGB);
             Graphics2D g2 = res.createGraphics();
-            g2.translate((rectDes.width - srcWidth) / 2, (rectDes.height - srcHeight) / 2);
+            g2.translate(Math.abs((rectDes.width - srcWidth)) / 2, Math.abs((rectDes.height - srcHeight)) / 2);
             g2.rotate(Math.toRadians(angel), srcWidth / 2.0, srcHeight / 2.0);
             g2.drawImage(src, null, null);
             g2.dispose();
@@ -232,14 +234,14 @@ public class ImageUtils {
      */
     public static Rectangle calcRotatedSize(Rectangle src, Float angel) {
 
-        if (angel >= 90) {
-            if (angel / 90 % 2 == 1) {
-                int temp = src.height;
-                src.height = src.width;
-                src.width = temp;
-            }
-            angel = angel % 90;
-        }
+//        if (angel >= 90) {
+//            if (angel / 90 % 2 == 1) {
+//                int temp = src.height;
+//                src.height = src.width;
+//                src.width = temp;
+//            }
+//            angel = angel % 90;
+//        }
 
         double r = Math.sqrt(src.height * src.height + src.width * src.width) / 2;
         double len = 2 * Math.sin(Math.toRadians(angel) / 2) * r;
@@ -248,8 +250,8 @@ public class ImageUtils {
         double angelDaltaHeight = Math.atan((double) src.width / src.height);
         int lenDaltaWidth = (int) (len * Math.cos(Math.PI - angelAlpha - angelDaltaWidth));
         int lenDaltaHeight = (int) (len * Math.cos(Math.PI - angelAlpha - angelDaltaHeight));
-        int desWidth = src.width + lenDaltaWidth * 2;
-        int desHeight = src.height + lenDaltaHeight * 2;
+        int desWidth = src.width + Math.abs(lenDaltaWidth) * 2;
+        int desHeight = src.height + Math.abs(lenDaltaHeight) * 2;
         return new java.awt.Rectangle(new Dimension(desWidth, desHeight));
     }
 

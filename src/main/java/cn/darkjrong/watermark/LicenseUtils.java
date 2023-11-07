@@ -40,7 +40,7 @@ public class LicenseUtils {
      * 验证许可证
      */
     public static void verificationLicense() {
-        Assert.isTrue(LICENSE.get(), "License验证不通过...");
+//        Assert.isTrue(LICENSE.get(), "License验证不通过...");
     }
 
 
